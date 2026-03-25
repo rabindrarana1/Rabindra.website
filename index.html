@@ -1,425 +1,279 @@
 <!DOCTYPE html>
-<html>
+<html lang="ne">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rabindra Rana Helping Website</title>
-
+<title>Rabindra Rana Helping Website - Updated</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 <style>
-body {
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(120deg,#f6f9fc,#e9f0ff);
-}
-
-/* HEADER */
-header {
-    background:linear-gradient(45deg,#ff416c,#ff4b2b);
-    color:white;
-    padding:15px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-#profilePic {
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    border:3px solid white;
-}
-
-/* CONTAINER */
+body {margin:0;font-family:'Roboto','Segoe UI',sans-serif;background:linear-gradient(120deg,#f6f9fc,#e9f0ff);transition:0.3s;}
+body.dark { background:#121212;color:#f0f0f0; }
+body.dark header { background:linear-gradient(45deg,#555,#222); }
+body.dark .news, body.dark #invoiceContainer, body.dark #calculator { background:#1e1e1e;color:#f0f0f0; }
+body.dark input, body.dark textarea, body.dark select { background:#333;color:#f0f0f0;border:1px solid #555; }
+header { background:linear-gradient(45deg,#ff416c,#ff4b2b); color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; }
+#profilePic { width:65px;height:65px;border-radius:50%;border:3px solid white; }
 .container { padding:20px; }
-
-/* NEWS CARD */
-.news {
-    background:white;
-    padding:15px;
-    margin-top:15px;
-    border-radius:15px;
-    box-shadow:0 8px 20px rgba(0,0,0,0.1);
-    border-left:5px solid #ff416c;
-}
-
-.news img {
-    width:100%;
-    border-radius:10px;
-    margin-bottom:10px;
-}
-
+.news { background:white;padding:15px;margin-top:15px;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,0.1);border-left:5px solid #ff416c; transition:0.3s; }
+.news img { width:100%;border-radius:10px;margin-bottom:10px;cursor:pointer; }
 .vertical { aspect-ratio:9/16; object-fit:cover; }
 .horizontal { aspect-ratio:16/9; object-fit:cover; }
 .square { aspect-ratio:1/1; object-fit:cover; }
-
-/* BUTTON */
-button {
-    padding:8px 14px;
-    margin:5px;
-    border:none;
-    background:linear-gradient(45deg,#36d1dc,#5b86e5);
-    color:white;
-    border-radius:20px;
-    cursor:pointer;
-}
-
-/* TEXTAREA */
-textarea {
-    width:100%;
-    height:100px;
-    border-radius:10px;
-    padding:10px;
-}
-
-/* INPUT */
-input, select {
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-    border-radius:10px;
-    border:1px solid #ccc;
-}
-
-/* SEARCH */
+button { padding:8px 14px; margin:5px; border:none; background:linear-gradient(45deg,#36d1dc,#5b86e5); color:white; border-radius:20px; cursor:pointer; }
+textarea,input { width:100%; padding:10px; margin:5px 0; border-radius:10px; border:1px solid #ccc; }
 #searchInput { margin:10px 0; }
-
-/* HIGHLIGHT */
-.highlight {
-    background:linear-gradient(45deg,gold,orange);
-    padding:12px;
-    border-radius:10px;
-    font-weight:bold;
-}
+.highlight { background:linear-gradient(45deg,gold,orange); padding:12px; border-radius:10px; font-weight:bold; }
+#notification { position:fixed; top:20px; right:20px; background:#36d1dc; color:white; padding:10px 15px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); display:none; z-index:1000; }
 </style>
-
 </head>
 <body>
 
 <header>
 <h1>Rabindra Rana Helping Website</h1>
 <img id="profilePic">
+<button id="darkModeBtn">🌙 Dark Mode</button>
 </header>
 
-<div class="container">
+<div id="notification"></div>
 
+<div class="container">
 <h2>🧑 About Me</h2>
 <p>रबिन्द्र राना</p>
-
 <hr>
 
-<button onclick="login()">Admin Login</button>
-
+<button id="adminLoginBtn">Admin Login</button>
 <div id="adminPanel" style="display:none;">
 <input type="file" id="profileInput">
-<button onclick="uploadPhoto()">Change Photo</button>
-
+<button id="changePhotoBtn">Change Photo</button>
 <br><br>
-<input type="file" id="newsImage">
-<select id="imageStyle">
-    <option value="horizontal">📺 YouTube (16:9)</option>
-    <option value="vertical">📱 TikTok (9:16)</option>
-    <option value="square">🟦 Square (1:1)</option>
-    <option value="normal">Normal</option>
-</select>
 
+<!-- News Posting -->
+<input type="file" id="newsImage">
+<input type="text" id="newsLink" placeholder="समाचार / लिङ्क URL (Optional)">
+<select id="imageStyle">
+<option value="horizontal">📺 YouTube (16:9)</option>
+<option value="vertical">📱 TikTok (9:16)</option>
+<option value="square">🟦 Square (1:1)</option>
+<option value="normal">Normal</option>
+</select>
 <br><br>
 <textarea id="newsInput" placeholder="नयाँ न्युज लेख्नुहोस्"></textarea>
-<button onclick="addNews()">Post News</button>
-
+<button id="postNewsBtn">Post News</button>
 <br><br>
-<button onclick="changePassword()">Change Password</button>
+
+<!-- Link Share System -->
+<h3>📷 Link Share System</h3>
+<input type="file" id="linkImage">
+<input type="text" id="linkURL" placeholder="Image click URL">
+<input type="text" id="linkTitle" placeholder="Optional Title for image">
+<button id="postLinkBtn">Post Link Image</button>
+<br><br>
+
+<button id="changePassBtn">Change Password</button>
 </div>
 
 <hr>
-
-<input type="text" id="searchInput" placeholder="🔍 News खोज्नुहोस्..." onkeyup="searchNews()">
-
+<input type="text" id="searchInput" placeholder="🔍 News खोज्नुहोस्...">
 <div class="highlight">📌 आजका मुख्य समाचार</div>
 <div id="newsContainer"></div>
 
 <hr>
 <h2>💬 आफ्नो समस्या हामीलाई पठाउनुहोस्</h2>
 <form id="feedbackForm">
-    <input type="text" id="viewerName" placeholder="तपाईंको नाम" required><br><br>
-    <input type="text" id="viewerContact" placeholder="Gmail ID वा Phone Number" required><br><br>
-    <textarea id="viewerProblem" placeholder="तपाईंको समस्या यहाँ लेख्नुहोस्" required></textarea><br><br>
-    <button type="submit">Submit</button>
+<input type="text" id="viewerName" placeholder="तपाईंको नाम" required><br><br>
+<input type="text" id="viewerContact" placeholder="Gmail ID वा Phone Number" required><br><br>
+<textarea id="viewerProblem" placeholder="तपाईंको समस्या यहाँ लेख्नुहोस्" required></textarea><br><br>
+<button type="submit">Submit</button>
 </form>
 <div id="feedbackMsg" style="color:green; margin-top:10px;"></div>
 
-</div>
+<hr>
+<h2>🧾 व्यापारी बिल</h2>
+<div id="invoiceContainer">... (Invoice system code) ...</div>
+<hr>
+<h2>🧮 क्यालकुलेटर</h2>
+<div id="calculator">... (Calculator code) ...</div>
 
 <script>
-
-// PASSWORD SYSTEM
-let PASSWORD = localStorage.getItem("adminPass") || "admin123";
-let isAdmin = false;
-
-// LOGIN
-function login(){
-    let pass = prompt("Enter Admin Password:");
-    if(pass === PASSWORD){
-        isAdmin = true;
-        document.getElementById("adminPanel").style.display = "block";
-        displayNews();
-    } else {
-        alert("Wrong Password!");
-    }
+// ----------------- HELPER -----------------
+function showNotification(msg){
+    const note = document.getElementById('notification');
+    note.innerText = msg;
+    note.style.display='block';
+    setTimeout(()=>{ note.style.display='none'; },3000);
 }
+function saveLocal(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+function loadLocal(key){ return JSON.parse(localStorage.getItem(key))||[]; }
 
-// CHANGE PASSWORD
-function changePassword(){
-    let oldPass = prompt("पुरानो Password हाल्नुहोस्:");
-    if(oldPass !== PASSWORD){ alert("Wrong Old Password!"); return; }
-    let newPass = prompt("नयाँ Password हाल्नुहोस्:");
-    if(newPass && newPass.length >= 4){
-        PASSWORD = newPass;
-        localStorage.setItem("adminPass", newPass);
-        alert("Password changed!");
-    }
-}
+// ----------------- DARK MODE -----------------
+document.getElementById('darkModeBtn').addEventListener('click',()=>{ document.body.classList.toggle('dark'); });
 
-// PROFILE PHOTO
-function uploadPhoto(){
-    let last = localStorage.getItem("photoTime");
-    let now = new Date().getTime();
-    if(last && now - last < 86400000){ alert("24 घण्टा पछि मात्र change!"); return; }
-
-    let file = document.getElementById("profileInput").files[0];
-    let reader = new FileReader();
-    reader.onload = function(e){
-        localStorage.setItem("profilePic", e.target.result);
-        localStorage.setItem("photoTime", now);
-        document.getElementById("profilePic").src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-// LOAD PROFILE
-let saved = localStorage.getItem("profilePic");
-if(saved) document.getElementById("profilePic").src = saved;
-
-// ADD NEWS WITH IMAGE STYLE
-function addNews(){
-    let text = document.getElementById("newsInput").value;
-    let file = document.getElementById("newsImage").files[0];
-    let style = document.getElementById("imageStyle").value;
-    if(text.trim() === "") return;
-
-    let reader = new FileReader();
-    reader.onload = function(e){
-        let newsList = JSON.parse(localStorage.getItem("newsList")) || [];
-        newsList.unshift({
-            text: text,
-            image: e.target.result,
-            style: style,
-            time: new Date().toLocaleString()
-        });
-        localStorage.setItem("newsList", JSON.stringify(newsList));
-        document.getElementById("newsInput").value = "";
-        document.getElementById("newsImage").value = "";
-        displayNews();
-    };
-    if(file){ reader.readAsDataURL(file); }
-    else{ reader.onload({target:{result:""}}); }
-}
-
-// DISPLAY NEWS
-function displayNews(){
-    let newsList = JSON.parse(localStorage.getItem("newsList")) || [];
-    let container = document.getElementById("newsContainer");
-    container.innerHTML = "";
-    newsList.forEach((news,index)=>{
-        container.innerHTML += `
-        <div class="news">
-            ${news.image ? `<img src="${news.image}" class="${news.style}">` : ""}
-            <p>${news.text}</p>
-            <small>${news.time}</small><br>
-            ${isAdmin ? `<button onclick="editNews(${index})">Edit</button>
-            <button onclick="deleteNews(${index})">Delete</button>` : ""}
-        </div>`;
-    });
-}
-
-// DELETE
-function deleteNews(index){
-    let newsList = JSON.parse(localStorage.getItem("newsList")) || [];
-    newsList.splice(index,1);
-    localStorage.setItem("newsList", JSON.stringify(newsList));
-    displayNews();
-}
-
-// EDIT
-function editNews(index){
-    let newsList = JSON.parse(localStorage.getItem("newsList")) || [];
-    let newText = prompt("Edit News:", newsList[index].text);
-    if(newText){
-        newsList[index].text = newText;
-        localStorage.setItem("newsList", JSON.stringify(newsList));
-        displayNews();
-    }
-}
-
-// SEARCH
-function searchNews(){
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let newsList = JSON.parse(localStorage.getItem("newsList")) || [];
-    let container = document.getElementById("newsContainer");
-    container.innerHTML = "";
-    newsList.forEach((news,index)=>{
-        if(news.text.toLowerCase().includes(input)){
-            container.innerHTML += `
-            <div class="news">
-                ${news.image ? `<img src="${news.image}" class="${news.style}">` : ""}
-                <p>${news.text}</p>
-                <small>${news.time}</small><br>
-                ${isAdmin ? `<button onclick="editNews(${index})">Edit</button>
-                <button onclick="deleteNews(${index})">Delete</button>` : ""}
-            </div>`;
-        }
-    });
-}
-
-// LOAD
-displayNews();
-
-// FEEDBACK FORM
-document.getElementById("feedbackForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    let name = document.getElementById("viewerName").value.trim();
-    let contact = document.getElementById("viewerContact").value.trim();
-    let problem = document.getElementById("viewerProblem").value.trim();
-    if(!name || !contact || !problem){ alert("सबै field अनिवार्य छ!"); return; }
-
-    let feedbackList = JSON.parse(localStorage.getItem("feedbackList")) || [];
-    feedbackList.push({
-        name: name,
-        contact: contact,
-        problem: problem,
-        time: new Date().toLocaleString()
-    });
-    localStorage.setItem("feedbackList", JSON.stringify(feedbackList));
-    document.getElementById("feedbackMsg").innerText = "तपाईंको समस्या submit भयो! धन्यवाद 🙏";
-    document.getElementById("feedbackForm").reset();
+// ----------------- ADMIN -----------------
+let PASSWORD = localStorage.getItem('adminPass')||'admin123';
+let isAdmin=false;
+document.getElementById('adminLoginBtn').addEventListener('click',()=>{
+    let pass=prompt('Enter Admin Password:');
+    if(pass===PASSWORD){
+        isAdmin=true;
+        document.getElementById('adminPanel').style.display='block';
+        displayNews(); displayLinkImages();
+        showNotification('Admin Logged In');
+    }else alert('Wrong Password!');
 });
+document.getElementById('changePassBtn').addEventListener('click',()=>{
+    let oldPass=prompt('पुरानो Password हाल्नुहोस्:');
+    if(oldPass!==PASSWORD){ alert('Wrong Old Password!'); return; }
+    let newPass=prompt('नयाँ Password हाल्नुहोस्:');
+    if(newPass&&newPass.length>=4){ PASSWORD=newPass; localStorage.setItem('adminPass',newPass); alert('Password Changed'); }
+});
+document.getElementById('changePhotoBtn').addEventListener('click',()=>{
+    const file=document.getElementById('profileInput').files[0];
+    if(!file){ alert('Select a photo!'); return; }
+    const reader=new FileReader();
+    reader.onload=function(e){ localStorage.setItem('profilePic',e.target.result); document.getElementById('profilePic').src=e.target.result; showNotification('Photo Updated'); }
+    reader.readAsDataURL(file);
+});
+let savedPic=localStorage.getItem('profilePic'); if(savedPic) document.getElementById('profilePic').src=savedPic;
+
+// ----------------- NEWS SYSTEM -----------------
+document.getElementById('postNewsBtn').addEventListener('click',()=>{
+    const text=document.getElementById('newsInput').value.trim();
+    if(!text) return;
+    const style=document.getElementById('imageStyle').value;
+    const link=document.getElementById('newsLink').value.trim();
+    const file=document.getElementById('newsImage').files[0];
+    const reader=new FileReader();
+    reader.onload=function(e){
+        const newsList=loadLocal('newsList');
+        newsList.unshift({text,image:e.target.result,link,style,time:new Date().toLocaleString()});
+        saveLocal('newsList',newsList);
+        document.getElementById('newsInput').value=''; document.getElementById('newsImage').value=''; document.getElementById('newsLink').value='';
+        displayNews(); showNotification('News Posted');
+    }
+    if(file){ reader.readAsDataURL(file); } else reader.onload({target:{result:''}});
+});
+
+function displayNews(){
+    const container=document.getElementById('newsContainer');
+    container.innerHTML='';
+    loadLocal('newsList').forEach((n,i)=>{
+        const div=document.createElement('div'); div.className='news';
+        if(n.image){ const img=document.createElement('img'); img.src=n.image; img.className=n.style; if(n.link){ img.onclick=()=>window.open(n.link,'_blank'); } div.appendChild(img); }
+        const p=document.createElement('p'); p.textContent=n.text; div.appendChild(p);
+        const small=document.createElement('small'); small.textContent=n.time; div.appendChild(small);
+
+        // Admin-only Delete/Edit for news
+        if(isAdmin){
+            const delBtn=document.createElement('button'); delBtn.textContent='Delete';
+            delBtn.onclick=()=>{
+                const arr=loadLocal('newsList');
+                arr.splice(i,1);
+                saveLocal('newsList',arr);
+                displayNews();
+                showNotification('News Deleted');
+            };
+            div.appendChild(delBtn);
+        }
+
+        container.appendChild(div);
+    });
+}
+
+// ----------------- LINK SHARE SYSTEM -----------------
+document.getElementById('postLinkBtn').addEventListener('click',()=>{
+    if(!isAdmin){ alert("Only admin can post link images!"); return; }
+
+    const file=document.getElementById('linkImage').files[0];
+    const url=document.getElementById('linkURL').value.trim();
+    const title=document.getElementById('linkTitle').value.trim();
+
+    if(!file||!url){ alert('Image र URL आवश्यक छ!'); return; }
+
+    const reader=new FileReader();
+    reader.onload=function(e){
+        const linkImages=loadLocal('linkImages');
+        linkImages.unshift({image:e.target.result,url,title});
+        saveLocal('linkImages',linkImages);
+        document.getElementById('linkImage').value='';
+        document.getElementById('linkURL').value='';
+        document.getElementById('linkTitle').value='';
+        displayLinkImages();
+        showNotification('Link Image Posted');
+    }
+    reader.readAsDataURL(file);
+});
+
+function displayLinkImages(){
+    const container=document.getElementById('newsContainer');
+    loadLocal('linkImages').forEach((imgObj,i)=>{
+        const div=document.createElement('div'); div.className='news';
+        const img=document.createElement('img'); img.src=imgObj.image; img.onclick=()=>window.open(imgObj.url,'_blank');
+        div.appendChild(img);
+
+        if(imgObj.title){
+            const small=document.createElement('small'); small.textContent=imgObj.title;
+            div.appendChild(small);
+        }
+
+        // Admin-only Edit/Delete
+        if(isAdmin){
+            const editBtn=document.createElement('button');
+            editBtn.textContent='Edit';
+            editBtn.onclick=()=>{
+                const newURL=prompt("Update URL:", imgObj.url);
+                const newTitle=prompt("Update Title:", imgObj.title);
+                if(newURL!==null){ imgObj.url=newURL; imgObj.title=newTitle; saveLocal('linkImages',loadLocal('linkImages')); displayLinkImages(); }
+            }
+            div.appendChild(editBtn);
+
+            const delBtn=document.createElement('button');
+            delBtn.textContent='Delete';
+            delBtn.onclick=()=>{
+                if(confirm("Are you sure to delete?")){
+                    const arr=loadLocal('linkImages');
+                    arr.splice(i,1);
+                    saveLocal('linkImages',arr);
+                    displayLinkImages();
+                    showNotification('Link Image Deleted');
+                }
+            }
+            div.appendChild(delBtn);
+        }
+
+        container.appendChild(div);
+    });
+}
+
+// ----------------- SEARCH -----------------
+document.getElementById('searchInput').addEventListener('input',()=>{
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    const container=document.getElementById('newsContainer'); container.innerHTML='';
+    loadLocal('newsList').filter(n=>n.text.toLowerCase().includes(q)).forEach(n=>{
+        const div=document.createElement('div'); div.className='news';
+        if(n.image){ const img=document.createElement('img'); img.src=n.image; img.className=n.style; if(n.link) img.onclick=()=>window.open(n.link,'_blank'); div.appendChild(img); }
+        const p=document.createElement('p'); p.textContent=n.text; div.appendChild(p);
+        const small=document.createElement('small'); small.textContent=n.time; div.appendChild(small);
+        container.appendChild(div);
+    });
+});
+
+// ----------------- FEEDBACK -----------------
+document.getElementById('feedbackForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const name=document.getElementById('viewerName').value.trim();
+    const contact=document.getElementById('viewerContact').value.trim();
+    const problem=document.getElementById('viewerProblem').value.trim();
+    if(!name||!contact||!problem){ alert('सबै field अनिवार्य छ!'); return; }
+    const feedback=loadLocal('feedbackList');
+    feedback.push({name,contact,problem,time:new Date().toLocaleString()});
+    saveLocal('feedbackList',feedback);
+    document.getElementById('feedbackMsg').innerText='तपाईंको समस्या submit भयो! धन्यवाद 🙏';
+    document.getElementById('feedbackForm').reset();
+});
+
+// Initial display
+displayNews(); displayLinkImages();
 </script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>व्यापारी बिल सिस्टम</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
-<style>
-body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(120deg, #f6f9fc, #e9f0ff);
-    padding: 20px;
-}
-
-h2 {
-    text-align: center;
-    background: linear-gradient(45deg,#36d1dc,#5b86e5);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-#invoiceContainer {
-    max-width: 900px;
-    margin: 0 auto;
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-#invoiceContainer input {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-
-#invoiceTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-#invoiceTable th, #invoiceTable td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-#invoiceTable th {
-    background: linear-gradient(45deg,#ff416c,#ff4b2b);
-    color: white;
-    border-radius: 5px;
-}
-
-#invoiceTable input {
-    width: 90%;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #aaa;
-}
-
-button {
-    padding: 8px 15px;
-    margin: 8px 5px 0 0;
-    border: none;
-    border-radius: 20px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    background: linear-gradient(45deg,#36d1dc,#5b86e5);
-    transition: 0.3s;
-}
-
-button:hover {
-    transform: scale(1.05);
-}
-
-h3 {
-    margin-top: 20px;
-    text-align: right;
-    font-size: 20px;
-    color: #ff416c;
-}
-
-.removeBtn {
-    background: linear-gradient(45deg,#ff4b2b,#ff416c);
-}
-
-.removeBtn:hover {
-    transform: scale(1.1);
-}
-
-/* Print only the invoice */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #invoiceContainer, #invoiceContainer * {
-    visibility: visible;
-  }
-  #invoiceContainer {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
-}
-</style>
-</head>
-<body>
-
 <div id="invoiceContainer">
 <h2>व्यापारी बिल</h2>
 
@@ -555,3 +409,6 @@ function calculateResult(){
     }
 }
 </script>
+
+</body>
+            </html>
